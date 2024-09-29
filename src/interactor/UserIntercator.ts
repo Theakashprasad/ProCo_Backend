@@ -1,9 +1,7 @@
 import { Admin, User } from "../entities/user";
 import { IUserInteractor } from "../providers/interface/user/IUserInteractor";
 import { IUserRepository } from "../providers/interface/user/IUserRepository";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { string } from "yup";
 import { Profile } from "../entities/profile";
 import { ChatAi } from "../entities/chatAi";
 import { Question } from "../entities/question";

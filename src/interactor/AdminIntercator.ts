@@ -1,12 +1,5 @@
-import { Admin, User } from "../entities/user";
-import { IUserInteractor } from "../providers/interface/user/IUserInteractor";
-import { IUserRepository } from "../providers/interface/user/IUserRepository";
-import jwt from "jsonwebtoken";
+import { Admin } from "../entities/user";
 import dotenv from "dotenv";
-import { string } from "yup";
-import { Profile } from "../entities/profile";
-import { ChatAi } from "../entities/chatAi";
-import { Question } from "../entities/question";
 import { IAdminInteractor } from "../providers/interface/admin/IAdminInteractor";
 import { IAdminrRepository } from "../providers/interface/admin/IAdminRepository";
 import { Payment } from "../entities/payment";
@@ -30,7 +23,7 @@ export class AdminInteractor implements IAdminInteractor {
   ): Promise<Admin | null> => {
     return await this._repostitory.adminLogin(email, password);
   };
-  
+
   getPayment = async (): Promise<Payment[] | null> => {
     try {
       return await this._repostitory.getPayment();
@@ -49,7 +42,11 @@ export class AdminInteractor implements IAdminInteractor {
     }
   };
 
-  addWallet = async (proId: string, numberOfUsers: number, amount: number): Promise<Wallet | null> => {
+  addWallet = async (
+    proId: string,
+    numberOfUsers: number,
+    amount: number
+  ): Promise<Wallet | null> => {
     try {
       return await this._repostitory.addWallet(proId, numberOfUsers, amount);
     } catch (error) {
@@ -67,9 +64,10 @@ export class AdminInteractor implements IAdminInteractor {
     }
   };
 
-  blogVerify = async (userId: string, isBlocked: boolean): Promise<Blog | null> => {
+  blogVerify = async (
+    userId: string,
+    isBlocked: boolean
+  ): Promise<Blog | null> => {
     return await this._repostitory.blogVerify(userId, isBlocked);
-  }
-
-
+  };
 }

@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProRepository = void 0;
 const userModel_1 = require("../model/userModel");
+// import bcrypt from "bcryptjs";
 const dotenv_1 = __importDefault(require("dotenv"));
 const proModel_1 = require("../model/proModel");
 const blogModel_1 = require("../model/blogModel");

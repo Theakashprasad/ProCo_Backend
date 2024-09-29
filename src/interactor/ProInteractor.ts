@@ -1,9 +1,6 @@
-import { Admin, User } from "../entities/user";
 import { IProInteractor } from "../providers/interface/pro/IProInteractor";
 import { IProRepository } from "../providers/interface/pro/IProRepository";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { string } from "yup";
 import { Pro } from "../entities/pro";
 import { Blog } from "../entities/blog";
 import { Connection } from "../entities/connection";

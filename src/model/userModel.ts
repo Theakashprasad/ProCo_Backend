@@ -1,5 +1,4 @@
 import mongoose ,{Schema,Document} from 'mongoose'
-import { string } from 'yup'
 
 export interface UserDocument extends Document{
     fullname:string
