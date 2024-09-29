@@ -3,3 +3,6 @@
 
 #DIST
 dist/
+
+#NODEMODULES
+node_modules/
