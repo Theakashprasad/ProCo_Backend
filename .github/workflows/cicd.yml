@@ -1,28 +1,30 @@
 name: Deploy Node Application
 
-on:
+on: 
   push:
     branches:
-      - main
+      - mern-ec2-docker
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source
-        uses: action/checkout@v4
-      - name: Login to docket hub
-        run: docker login -u "akashprasad123" -p "akashprasad"
+        uses: actions/checkout@v4
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}     
       - name: Build Docker Image
         run: docker build -t akashprasad123/nodejs-app  .
       - name: Publish Image to docker hub
-        run: docker push akashprasad123/nodejs-app:latest
-
+        run: docker push akashprasad123/nodejs-app:latest 
+ 
   deploy:
-   needs: build
-   runs-on: self-hosted
-   steps:
-     - name: Pull image from docker hub
-       run: docker pull akashprasad123/nodejs-app:latest
-     - name: Run Docker Container
-       run: docker run -d -p 3005:3005 --name nodejs-app-container -e "MONGO_PASSWORD=mongodb+srv://proco123:proco123@proco.dzyhd4o.mongodb.net/?retryWrites=true&w=majority&appName=proco" akashprasad123/nodejs-app
+    needs: build
+    runs-on: self-hosted 
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull akashprasad123/nodejs-app:latest 
+      - name: Delete old container
+        run: docker rm -f nodejs-app-container  
+      - name: Run Docker Container
+        run: docker run -d -p 3005:3005 --name nodejs-app-container -e MONGO_PASSWORD='${{ secrets.MONGO_PASSWORD }}' akashprasad123/nodejs-app
