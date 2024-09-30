@@ -29,8 +29,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ['https://www.proco.life', 'https://proco.life', 'http://localhost:3000'],
+    origin: ['http://proco.life', 'https://proco.life', 'http://www.proco.life', 'https://www.proco.life'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   })
   );
