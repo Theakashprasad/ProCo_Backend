@@ -14,24 +14,27 @@ dotenv.config();
 connectDb();
 
 const app = express();
-const corsOptions = {
-  origin: ['https://www.proco.life', 'https://proco.life', 'http://localhost:3000'], // Specify allowed origins
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true // Allow credentials
-};
+
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ['https://proco.life'],
+    origin: ['https://www.proco.life','https://proco.life','http://localhost:3000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, 
     }
 });
 
-app.use(cors(corsOptions)); // Use CORS middleware with options
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: ['https://www.proco.life', 'https://proco.life', 'http://localhost:3000'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  })
+  );
+  app.options('*', cors()); // Allow all OPTIONS requests
 
 app.use("/api/", UserRoutes); 
 app.use("/api/pro/", ProRoutes);
