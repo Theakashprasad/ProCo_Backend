@@ -22,7 +22,7 @@ const corsOptions = {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ['https://www.proco.life','https://proco.life','http://localhost:3000'],
+    origin: ['https://proco.life'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, 
     }
@@ -32,8 +32,6 @@ app.use(cors(corsOptions)); // Use CORS middleware with options
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-  app.options('*', cors()); // Allow all OPTIONS requests
 
 app.use("/api/", UserRoutes); 
 app.use("/api/pro/", ProRoutes);
