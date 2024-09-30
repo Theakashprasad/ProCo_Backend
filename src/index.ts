@@ -32,10 +32,10 @@ app.use(
     origin: ['https://www.proco.life','https://proco.life','http://localhost:3000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
-  })
-);
+    })
+  );
 
-app.use("/api/", UserRoutes);
+app.use("/api", UserRoutes); 
 app.use("/api/pro/", ProRoutes);
 app.use("/api/chat/", ChatRoutes);
 app.use("/api/admin/", AdminRoutes);
