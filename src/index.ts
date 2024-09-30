@@ -8,21 +8,11 @@ import ProRoutes from "./router/proRouter";
 import ChatRoutes from "./router/chatrouter";
 import AdminRoutes from "./router/adminRouter";
 import cookieParser from "cookie-parser";
-import { CoversationModel } from "./model/conversationModel";
-import { UserModel } from "./model/userModel";
-import mongoose from "mongoose";
-import { ChatModel } from "./model/messModel";
 import { Server } from "socket.io";
-import { CoversationGroupModel } from "./model/groupChat";
-import { GroupChatModel } from "./model/groupMess";
+
 dotenv.config();
 connectDb();
-// const io = require("socket.io")(8080, {
-//   cors: {
-//     origin: "http://localhost:3000",
-//     methods: []
-//   },
-// });
+
 const app = express();
 
 const server = http.createServer(app);
@@ -30,7 +20,7 @@ const io = new Server(server, {
   cors: {
     origin: ['https://www.proco.live','https://proco.live','http://localhost:3000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // Include cookies and authorization headers  
+    credentials: true, 
     }
 });
 
@@ -39,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: '*',
+    origin: ['https://www.proco.live','https://proco.live','http://localhost:3000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   })
@@ -53,16 +43,15 @@ app.get("/", (req, res) => {
   res.send("hy");
 });
 
+
+// CHAT
 const userSocketMap = new Map();
 
 io.on('connection', (socket) => {
-
   socket.on('user_connected', (userId) => {
     console.log('User connected:', userId);
     userSocketMap.set(userId, socket.id);
-    
   });
-
 
   socket.on('join chat', async (chatData) => {
     try {
@@ -94,10 +83,7 @@ io.on('connection', (socket) => {
   });
 
 
-
-
-
-
+//WEB RTC
   socket.on('call', async (participants) => {
     try {
       const { caller, receiver} = participants;
@@ -180,198 +166,7 @@ io.on('connection', (socket) => {
     console.log('User disconnected');
   });
 });
-// let users: { userId: any; socketId: string }[] = [];
-// io.on("connection", (socket: Socket) => {
-//   console.log("User connected", socket.id);
-//   socket.on("addUser", (userId) => {
-//     const isUserExist = users.find((user) => user.userId === userId);
-//     if (!isUserExist) {
-//       const user = { userId, socketId: socket.id };
-//       users.push(user);
-//       io.emit("getUsers", users);
-//     }
-//   });
 
-//   socket.on(
-//     "sendMessage",
-//     async ({ senderId, receiverId, message,createdAt, conversationId }) => {
-//       const receiver = users.find((user) => user.userId === receiverId);
-//       const sender = users.find((user) => user.userId === senderId);
-//       const user = await UserModel.findById(senderId);
-//       console.log("sender :>> ", sender, 'receiver' , receiver);
-//       if (receiver) {
-//         io.to(receiver.socketId)
-//           .to(sender?.socketId)
-//           .emit("getMessage", {
-//             senderId,
-//             message,
-//             createdAt,
-//             conversationId,
-//             receiverId,
-//             user: {
-//               id: user?._id,
-//               fullName: user?.fullname,
-//               email: user?.email,
-//             },
-//           });
-//       } else {
-//         io.to(sender?.socketId).emit("getMessage", {
-//           senderId,
-//           message,
-//           createdAt,
-//           conversationId,
-//           receiverId,
-//           user: { id: user?._id, fullName: user?.fullname, email: user?.email },
-//         });
-//       }
-//     }
-//   );
-
-//   socket.on("disconnect", () => {
-//     users = users.filter((user) => user.socketId !== socket.id);
-//     io.emit("getUsers", users);
-//   });
-//   // io.emit('getUsers', socket.userId);
-// });
-
-// app.post("/api/conversation", async (req, res) => {
-//   try {
-//     const { senderId, receiverId } = req.body;
-//     const newCoversation = new CoversationModel({
-//       members: [senderId, receiverId],
-//     });
-//     await newCoversation.save();
-//     res.status(200).send("Conversation created successfully");
-//   } catch (error) {
-//     console.log(error, "Error");
-//   }
-// });
-
-// app.get("/api/conversations/:userId", async (req, res) => {
-//   try {
-//     const userId = req.params.userId;
-//     const objectIdUserId = new mongoose.Types.ObjectId(userId);
-//     const conversations = await CoversationModel.find({
-//       members: { $in: [userId] },
-//     });
-//     // console.log('conversations',conversations);
-
-//     const conversationUserData = Promise.all(
-//       conversations.map(async (conversation) => {
-//         // const receiverId = conversation.members.find((member) => member !== userId);
-//         const receiverId = conversation.members.find(
-//           (member) => !member.equals(objectIdUserId)
-//         );
-
-//         const user = await UserModel.findById(receiverId);
-//         return {
-//           user: {
-//             receiverId: user?._id,
-//             email: user?.email,
-//             fullName: user?.fullname,
-//           },
-//           conversationId: conversation._id,
-//           createdAt: conversation.createdAt
-//         };
-//       })
-//     );
-//     res.status(200).json(await conversationUserData);
-//   } catch (error) {
-//     console.log(error, "Error");
-//   }
-// });
-
-// app.post("/api/message", async (req, res) => {
-//   try {
-//     const { conversationId, senderId, message, receiverId = "" } = req.body;
-//     // console.log(req.body);
-
-//     if (!senderId || !message)
-//       return res.status(400).send("Please fill all required fieldsss");
-//     if (conversationId === "new" && receiverId) {
-//       const newCoversation = new CoversationModel({
-//         members: [senderId, receiverId],
-//       });
-//       await newCoversation.save();
-//       const newMessage = new ChatModel({
-//         conversationId: newCoversation._id,
-//         senderId,
-//         message,
-//       });
-//       await newMessage.save();
-//       return res.status(200).send("Message sent successfully");
-//     } else if (!conversationId && !receiverId) {
-//       return res.status(400).send("Please fill all required fields");
-//     }
-//     const newMessage = new ChatModel({ conversationId, senderId, message });
-//     await newMessage.save();
-//     res.status(200).send("Message sent successfully");
-//   } catch (error) {
-//     console.log(error, "Error");
-//   }
-// });
-
-// app.get("/api/message/:conversationId", async (req, res) => {
-//   try {
-//     const checkMessages = async (conversationId: any) => {
-//       // console.log(conversationId, "conversationId");
-//       const messages = await ChatModel.find({ conversationId }).exec();
-//       // console.log('messages',messages);
-//       const messageUserData = Promise.all(
-//         messages.map(async (message) => {
-//           const user = await UserModel.findById(message.senderId);
-
-//           return {
-//             user: {
-//               id: user?._id,
-//               email: user?.email,
-//               fullName: user?.fullname,
-//             },
-//             message: message.message,
-//             createdAt: message.createdAt , // Include createdAt here
-//           };
-//         })
-//       );
-//       res.status(200).json(await messageUserData);
-//     };
-//     const conversationId = req.params.conversationId;
-//     if (conversationId === "new") {
-//       const checkConversation = await CoversationModel.find({
-//         members: { $all: [req.query.senderId, req.query.receiverId] },
-//       });
-//       if (checkConversation.length > 0) {
-//         checkMessages(checkConversation[0]._id);
-//       } else {
-//         return res.status(200).json([]);
-//       }
-//     } else {
-//       checkMessages(conversationId);
-//     }
-//   } catch (error) {
-//     console.log("Error", error);
-//   }
-// });
-
-// app.get("/api/users/:userId", async (req, res) => {
-//   try {
-//     const userId = req.params.userId;
-//     const users = await UserModel.find({ _id: { $ne: userId } , role: "profesional" });
-//     const usersData = Promise.all(
-//       users.map(async (user) => {
-//         return {
-//           user: {
-//             email: user.email,
-//             fullName: user.fullname,
-//             receiverId: user._id,
-//           },
-//         };
-//       })
-//     );
-//     res.status(200).json(await usersData);
-//   } catch (error) {
-//     console.log("Error", error);
-//   }
-// });
 
 const port = process.env.PORT || 3005;
 server.listen(port, () => {

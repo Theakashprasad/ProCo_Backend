@@ -135,7 +135,7 @@ export class UserController {
             .cookie("access_token", JWTtoken, {
               expires: expiryDate,
               httpOnly: false,
-              secure: process.env.NODE_ENV === "production", // Ensure secure attribute is set in production
+              secure: true 
             })
             .status(200)
             .json({ data: response, success: true });
