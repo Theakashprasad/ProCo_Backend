@@ -35,7 +35,7 @@ app.use(
     })
   );
 
-app.use("/api", UserRoutes); 
+app.use("/api/", UserRoutes); 
 app.use("/api/pro/", ProRoutes);
 app.use("/api/chat/", ChatRoutes);
 app.use("/api/admin/", AdminRoutes);
