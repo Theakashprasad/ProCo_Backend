@@ -27,13 +27,14 @@ const io = new Server(server, {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: ['https://www.proco.life','https://proco.life','http://localhost:3000'],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-    })
-  );
+// app.use(
+//   cors({
+//     origin: ['https://www.proco.life', 'https://proco.life', 'http://localhost:3000'],
+//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//     credentials: true,
+//   })
+//   );
+  app.options('*', cors()); // This allows all OPTIONS requests to be handled
 
 app.use("/api/", UserRoutes); 
 app.use("/api/pro/", ProRoutes);
