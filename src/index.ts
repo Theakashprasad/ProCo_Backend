@@ -34,7 +34,6 @@ app.use(cookieParser());
 //     credentials: true,
 //   })
 //   );
-  app.options('*', cors()); // This allows all OPTIONS requests to be handled
 
 app.use("/api/", UserRoutes); 
 app.use("/api/pro/", ProRoutes);
