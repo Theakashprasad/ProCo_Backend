@@ -1,6 +1,5 @@
 import { Admin } from "../entities/user";
 import { UserModel } from "../model/userModel";
-// import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import { AdminModel } from "../model/adminModel";
 import { IAdminrRepository } from "../providers/interface/admin/IAdminRepository";

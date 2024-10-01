@@ -1,6 +1,5 @@
 import { IProRepository } from "../providers/interface/pro/IProRepository";
 import { UserModel } from "../model/userModel";
-// import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import { Pro } from "../entities/pro";
 import { ProModel } from "../model/proModel";

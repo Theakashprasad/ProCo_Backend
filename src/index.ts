@@ -18,38 +18,24 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [
-      "https://www.proco.life",
-      "https://proco.life",
-      "http://localhost:3000",
-    ],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-  },
+    origin: ['https://www.proco.life','https://proco.life','http://localhost:3000'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, 
+    }
 });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-// app.use(
-
-//   );
-app.options(
-  "*",
+app.use(
   cors({
-    origin: [
-      "http://proco.life",
-      "https://proco.life",
-      "http://www.proco.life",
-      "https://www.proco.life",
-    ],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: ['https://www.proco.life','https://proco.life','http://localhost:3000'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
-  })
-); // Allow all OPTIONS requests
+    })
+  );
 
-app.use("api/", UserRoutes);
+app.use("/api/", UserRoutes);  
 app.use("/api/pro/", ProRoutes);
 app.use("/api/chat/", ChatRoutes);
 app.use("/api/admin/", AdminRoutes);
@@ -57,18 +43,19 @@ app.get("/", (req, res) => {
   res.send("hy");
 });
 
+
 // CHAT
 const userSocketMap = new Map();
 
-io.on("connection", (socket) => {
-  socket.on("user_connected", (userId) => {
-    console.log("User connected:", userId);
+io.on('connection', (socket) => {
+  socket.on('user_connected', (userId) => {
+    console.log('User connected:', userId);
     userSocketMap.set(userId, socket.id);
   });
 
-  socket.on("join chat", async (chatData) => {
+  socket.on('join chat', async (chatData) => {
     try {
-      const { chatId } = chatData;
+      const { chatId} = chatData;
       if (chatId) {
         socket.join(`chat_${chatId}`);
         console.log(`User joined chat ${chatId}`);
@@ -80,19 +67,13 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("chat message", async (messageData) => {
+  socket.on('chat message', async (messageData) => {
     try {
-      console.log("chat message", messageData);
-      const { chatId, senderId, receiverId, messageText, createdAt } =
-        messageData;
+      console.log('chat message', messageData);
+      const { chatId, senderId, receiverId, messageText, createdAt } = messageData;
       if (chatId && senderId && receiverId && messageText && createdAt) {
         const receiverSocketId = userSocketMap.get(receiverId);
-        io.to(receiverSocketId).emit("chat message", {
-          chatId,
-          senderId,
-          messageText,
-          createdAt,
-        });
+          io.to(receiverSocketId).emit('chat message', { chatId, senderId, messageText ,createdAt});
       } else {
         console.error("Message data is incomplete");
       }
@@ -101,40 +82,38 @@ io.on("connection", (socket) => {
     }
   });
 
-  //WEB RTC
-  socket.on("call", async (participants) => {
+
+//WEB RTC
+  socket.on('call', async (participants) => {
     try {
-      const { caller, receiver } = participants;
-      console.log(participants, "call");
-      if (participants) {
-        console.log("incomingCall");
+      const { caller, receiver} = participants;
+      console.log(participants,  'call');
+      if (participants) { 
+        console.log('incomingCall')
         const receiverSocketId = userSocketMap.get(receiver._id);
-        console.log(receiverSocketId, "sp");
-        io.to(receiverSocketId).emit("incomingCall", { caller, receiver });
+        console.log(receiverSocketId,'sp')
+        io.to(receiverSocketId).emit('incomingCall', {caller,receiver });
       } else {
-        console.error("Call data is incomplete");
-      }
+        console.error("Call data is incomplete"); 
+      }   
     } catch (error) {
       console.error("Error in calling:", error);
     }
   });
 
-  socket.on("hangupDuringInitiation", async (ongoingCall) => {
-    try {
-      console.log("Hangup during initiation event received:", ongoingCall);
-      const { participants } = ongoingCall;
 
+  socket.on('hangupDuringInitiation', async (ongoingCall) => {
+    try {
+      console.log('Hangup during initiation event received:', ongoingCall);
+      const { participants } = ongoingCall;
+      
       if (participants && participants.caller && participants.receiver) {
         const receiverSocketId = userSocketMap.get(participants.caller._id);
-
+        
         if (receiverSocketId) {
-          io.to(receiverSocketId).emit("callCancelled", {
-            message: "The caller has cancelled the call.",
-          });
+          io.to(receiverSocketId).emit('callCancelled', { message: 'The caller has cancelled the call.' });
         }
-        console.log(
-          `Call cancelled by ${participants.receiver._id} to ${participants.caller._id}`
-        );
+        console.log(`Call cancelled by ${participants.receiver._id} to ${participants.caller._id}`);
       } else {
         console.error("Hangup during initiation data is incomplete");
       }
@@ -143,46 +122,37 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("webrtcSignal", async (data) => {
-    console.log(data, "webrtcSignal data");
-    if (data.isCaller) {
-      if (data.ongoingCall.participants.receiver._id) {
-        const emitSocketId = userSocketMap.get(
-          data.ongoingCall.participants.receiver._id
-        );
-        io.to(emitSocketId).emit("webrtcSignal", data);
+  socket.on('webrtcSignal', async (data) => {
+    console.log(data,'webrtcSignal data')
+    if(data.isCaller){
+      if(data.ongoingCall.participants.receiver._id){
+        const emitSocketId = userSocketMap.get(data.ongoingCall.participants.receiver._id);
+        io.to(emitSocketId).emit('webrtcSignal',data)
       }
-    } else {
-      if (data.ongoingCall.participants.caller._id) {
-        const emitSocketId = userSocketMap.get(
-          data.ongoingCall.participants.caller._id
-        );
-        io.to(emitSocketId).emit("webrtcSignal", data);
+    }else{
+      if(data.ongoingCall.participants.caller._id){
+        const emitSocketId = userSocketMap.get(data.ongoingCall.participants.caller._id);
+        io.to(emitSocketId).emit('webrtcSignal',data)
       }
     }
   });
 
-  socket.on("hangup", async (ongoingCall) => {
+  socket.on('hangup', async (ongoingCall) => {
     try {
-      console.log("Hangup event received:", ongoingCall);
+      console.log('Hangup event received:', ongoingCall);
       const { participants } = ongoingCall;
-
+      
       if (participants && participants.caller && participants.receiver) {
-        const otherParticipantId =
-          socket.id === userSocketMap.get(participants.caller._id)
-            ? participants.receiver._id
-            : participants.caller._id;
-
+        const otherParticipantId = socket.id === userSocketMap.get(participants.caller._id) 
+          ? participants.receiver._id 
+          : participants.caller._id;
+        
         const otherParticipantSocketId = userSocketMap.get(otherParticipantId);
-
+        
         if (otherParticipantSocketId) {
-          io.to(otherParticipantSocketId).emit("callEnded", {
-            message: "The other participant has ended the call.",
-          });
+          io.to(otherParticipantSocketId).emit('callEnded', { message: 'The other participant has ended the call.' });
         }
-        console.log(
-          `Call ended between ${participants.caller._id} and ${participants.receiver._id}`
-        );
+        console.log(`Call ended between ${participants.caller._id} and ${participants.receiver._id}`);
       } else {
         console.error("Hangup data is incomplete");
       }
@@ -191,10 +161,12 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("disconnect", () => {
-    console.log("User disconnected");
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
   });
 });
+
 
 const port = process.env.PORT || 3005;
 server.listen(port, () => {

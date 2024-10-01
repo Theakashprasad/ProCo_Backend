@@ -264,7 +264,7 @@ export class UserRepository implements IUserRepository {
       const data = await QuestionModel.create({
         question: question,
         name: name,
-        communityId: communityId
+        communityId: communityId,
       });
       return data;
     } catch (error) {
@@ -275,7 +275,7 @@ export class UserRepository implements IUserRepository {
 
   GetQuestions = async (communityId: string): Promise<Question[] | null> => {
     try {
-      const data = await QuestionModel.find({communityId})
+      const data = await QuestionModel.find({ communityId })
         .populate({
           path: "answers.userId", // Path to populate
           model: UserModel, // Use the model name as a string
@@ -345,7 +345,9 @@ export class UserRepository implements IUserRepository {
   todos = async (userId: string): Promise<Todo[] | null> => {
     try {
       console.log(userId);
-      const todos = await ToDoModel.find({ userId, status: false }).sort({ _id: -1 });
+      const todos = await ToDoModel.find({ userId, status: false }).sort({
+        _id: -1,
+      });
       return todos;
     } catch (error) {
       console.log("error", error);
@@ -400,12 +402,11 @@ export class UserRepository implements IUserRepository {
 
   addPayment = async (userId: string): Promise<Payment | null> => {
     try {
-      const data = await PaymentModel.create({userId});
+      const data = await PaymentModel.create({ userId });
       return data;
     } catch (error) {
       console.log("error", error);
       throw error;
     }
   };
-
 }
