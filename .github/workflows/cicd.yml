@@ -27,7 +27,7 @@ jobs:
       - name: Run Docker Container
         run: |
          docker run -d -p 3005:3005 --name backend-container \
-            -e CONNECTION_STRING='${{ secrets.MONGO_URL }}' \
+            -e CONNECTION_STRING='${{ secrets.CONNECTION_STRING }}' \
             -e MY_SECRET='${{ secrets.MY_SECRET }}' \
             -e NODE_ENV='${{ secrets.NODE_ENV }}' \
             -e S3_REGION='${{ secrets.S3_REGION }}' \
