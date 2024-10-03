@@ -30,7 +30,7 @@ router.post(
 );
 router.post("/otp", controller.otp.bind(controller));
 router.post(
-  "login",
+  "/login",
   validateRequest(loginSchema),
   controller.login.bind(controller)
 );
