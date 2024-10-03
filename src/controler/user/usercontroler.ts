@@ -131,14 +131,12 @@ export class UserController {
           if (response?.role == "user") {
             userPayment.userPaymentCheck(response);
           }
-          return res
-            .cookie("access_token", JWTtoken, {
-              expires: expiryDate,
-              httpOnly: false, 
-              secure:true
-            }) 
-            .status(200)
-            .json({ data: response, success: true });
+          return res.cookie('access_token', JWTtoken, {
+            expires: expiryDate,
+            httpOnly: true, // Ensures it’s not accessible via JS
+            secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
+          }).status(200).json({ data: response, success: true });
+          
         }
       }
     } catch (error) {
