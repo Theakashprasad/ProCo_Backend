@@ -135,7 +135,7 @@ export class UserController {
             expires: expiryDate,
             httpOnly: true, // Ensures it’s not accessible via JS
             secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
-          }).status(200).json({ data: response, success: true });
+          }).status(200).json({ data: response, success: true ,token: JWTtoken}); 
           
         }
       }
