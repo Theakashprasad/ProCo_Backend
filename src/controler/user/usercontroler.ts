@@ -134,8 +134,8 @@ export class UserController {
           return res
             .cookie("access_token", JWTtoken, {
               expires: expiryDate,
-              httpOnly: false,
-              secure: false 
+              httpOnly: true,
+              secure: true 
             })
             .status(200)
             .json({ data: response, success: true });
