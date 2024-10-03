@@ -20,6 +20,10 @@ jobs:
     needs: build 
     runs-on: self-hosted 
     steps: 
+      - name: Cleanup old images
+        run: |
+         docker image prune -f
+         docker rmi $(docker images -f "dangling=true" -q) || true
       - name: Pull image from Docker Hub
         run: docker pull akashprasad123/proco:latest
       - name: Delete old container  
