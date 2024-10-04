@@ -393,7 +393,7 @@ export class UserController {
       const uaerProfileData = await this._interactor.userData(email);
 
       return res.status(ResponseStatus.OK).json({
-        success: true,
+        success: true, 
         userData: userData,
         profileData: uaerProfileData,
       });
