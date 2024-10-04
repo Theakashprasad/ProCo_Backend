@@ -50,6 +50,7 @@ export class AdminController {
         .json({
           success: true,
           message: "Login succes",
+          token:JWTtoken,
         });
     } else {
       return res.status(401).json({

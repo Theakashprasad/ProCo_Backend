@@ -373,7 +373,10 @@ export class UserController {
   userData = async (req: Request, res: Response, next: NextFunction) => {
     let { email } = req.body;
     try {
+      console.log("emailsdfsdfsd",email);
+      
       const existingUser = await this._interactor.userData(email);
+       
       if (!existingUser) {
         return res.status(ResponseStatus.BadRequest).json({ success: false });
       }
