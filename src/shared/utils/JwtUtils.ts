@@ -13,7 +13,7 @@ declare global {
 export class JwtUtils {
   // to generate token for sending to frontend
   static generateToken(val: any): string {
-    const expiresIn = "1m";
+    const expiresIn = "1h";
     const secret = process.env.MY_SECRET as string;
     return jwt.sign({ id: val._id, email: val.email, role: val.role }, secret, {
       expiresIn,
