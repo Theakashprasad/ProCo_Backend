@@ -16,6 +16,7 @@ connectDb();
 const app = express();
 
 const server = http.createServer(app);
+const socketOrigins = process.env.CORS_ORIGINS?.split(',');
 const io = new Server(server, {
   cors: {
     origin: ['https://www.proco.life','https://proco.life','http://localhost:3000'],
@@ -27,6 +28,7 @@ const io = new Server(server, {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+const allowedOrigins = process.env.CORS_ORIGINS?.split(',');
 app.use(
   cors({
     origin: ['https://www.proco.life','https://proco.life','http://localhost:3000'],

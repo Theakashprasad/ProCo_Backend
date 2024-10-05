@@ -7,17 +7,18 @@ import { SendMail } from "../../shared/utils/MailUtils";
 import { UserModel } from "../../model/userModel";
 import { JwtUtils } from "../../shared/utils/JwtUtils";
 import { userPayment } from "../../shared/utils/userPayment";
+import { ResponseStatus } from "../../shared/utils/ResponseStatus";
 dotenv.config();
 //set enum for each reponse message
-enum ResponseStatus {
-  OK = 200,
-  Created = 201,
-  Accepted = 202,
-  BadRequest = 400,
-  Unauthorized = 401,
-  Forbidden = 403,
-  NotFound = 404,
-}
+// enum ResponseStatus {
+//   OK = 200,
+//   Created = 201,
+//   Accepted = 202,
+//   BadRequest = 400,
+//   Unauthorized = 401,
+//   Forbidden = 403,
+//   NotFound = 404,
+// }
 
 export class UserController {
   private _interactor: IUserInteractor;
