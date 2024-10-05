@@ -142,9 +142,6 @@ export class ProController {
     );
     console.log("imageData", image);
 
-    // const image = fileData.location;
-    // console.log('fileData', image);
-
     try {
       const existingUser = await this._interactor.blogPost(about, image, email);
       if (!existingUser)

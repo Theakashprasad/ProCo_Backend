@@ -34,6 +34,7 @@ app.use(
     credentials: true,
     })
   );
+  app.options('*', cors());
 
 app.use("/api/", UserRoutes);  
 app.use("/api/pro/", ProRoutes);
