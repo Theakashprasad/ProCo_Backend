@@ -138,7 +138,7 @@ export class UserController {
             secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
           }).status(200).json({ data: response, success: true ,token: JWTtoken}); 
           
-        }
+        } 
       }
     } catch (error) {
       return res.status(ResponseStatus.BadRequest).json(error);
