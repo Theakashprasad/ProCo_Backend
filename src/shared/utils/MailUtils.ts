@@ -13,14 +13,14 @@ export class SendMail {
           const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-              user: "akashprasadyt123@gmail.com",
+              user: email,
               pass: "quuv atrp tguy xchw",
             },
           });
 
           const mailOptions = {
-            from: '"ProCo" <akashyoungstar@gmail.com>',
-            to: 'akashprasadyt123@gmail.com',
+            from: '"ProCo">',
+            to: email,
             subject: "Your OTP for ProCo Authentication",
             html: `
               <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 10px;">

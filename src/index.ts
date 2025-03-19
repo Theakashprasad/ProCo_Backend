@@ -51,8 +51,7 @@ app.use("/api/pro/", ProRoutes);
 app.use("/api/chat/", ChatRoutes);
 app.use("/api/admin/", AdminRoutes);
 app.get("/", (req, res) => {
-  const data = process.env.S3_ACCESS_KEY
-  res.send(`are bhai, ${data}, helo`);
+  res.send(`HAI THERE -  this means the backend is working`);
 });
 
 // CHAT
