@@ -32,7 +32,7 @@ router.post("/otp", controller.otp.bind(controller));
 router.post(
   "/login",
   validateRequest(loginSchema),
-  controller.login.bind(controller)
+  controller.login.bind(controller) 
 );
 router.get("/user", controller.user.bind(controller));
 router.patch("/block/:userId/:action", controller.block.bind(controller));

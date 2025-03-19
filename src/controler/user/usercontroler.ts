@@ -55,14 +55,14 @@ export class UserController {
       const generateRandomString = (): number => {
         return Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
       };
-      const otp = generateRandomString();
+      const otp = generateRandomString(); 
 
       const mailer = SendMail.sendmail(email, otp);
 
       const data = await this._interactor.signup(
         fullname,
         email,
-        hashedPassword,
+        hashedPassword, 
         otp,
         false,
         role

@@ -22,7 +22,6 @@ class MailService {
         });
     }
 
-    
 
     public async sendMail({ email, subject, text }: EmailOptions): Promise<void> {
         try {
